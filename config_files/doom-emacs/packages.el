@@ -57,3 +57,5 @@
 (package! lsp-treemacs)
 (package! lsp-mode)
 (package! company)
+(package! kind-icon)
+(package! flycheck-plantuml)
