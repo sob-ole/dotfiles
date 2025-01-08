@@ -1,7 +1,20 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+
+;; Использование Unicode по умолчанию
+
 ;; Установка шрифта
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 16))
-(setq doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size 16))
+;; Set preferred coding systems
+(prefer-coding-system 'utf-8)
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+
+;; Define font specifications
+(setq doom-font (font-spec :family "Hack" :size 15 ))
+(setq doom-variable-pitch-font (font-spec :family "Hack" :size 15 ))
+(setq-default line-spacing 0)
+
+;; Performance optimization
+(setq inhibit-compacting-font-caches t)
 
 ;; Настройка темы
 (setq custom-safe-themes t)
@@ -24,8 +37,7 @@
   (projectile-mode +1)
   (setq projectile-run-use-comint-mode t))
 
-;;(use-package! flycheck
-;;  :ensure t)
+(setq ff-always-try-to-create nil)
 
 (defun my-c-mode-common-hook ()
   "Custom settings for C/C++ programming."
@@ -75,6 +87,7 @@
 (treemacs-follow-mode)
 
 (use-package! tree-sitter)
+(use-package! tree-sitter-langs)
 ;; Глобальная подсветка синтаксиса
 (global-tree-sitter-mode)
 
@@ -83,6 +96,13 @@
     (tree-sitter-hl-mode 1)))
 
 (add-hook 'tree-sitter-after-on-hook #'my-enable-tree-sitter-hl-mode)
+
+
+(use-package! rtags)
+(require 'rtags)
+(use-package! cmake-ide)
+(cmake-ide-setup)
+
 
 (use-package! flycheck-plantuml)
 ;; Диаграммы Plantuml
@@ -106,7 +126,19 @@
 (setq display-time-mail-function nil)
 (display-time-mode 1)
 
-;; ;; Отрисовка пробелов
+;; ;; Отрисовка отступов
+(use-package! highlight-indent-guides)
+(setq highlight-indent-guides-auto-enabled nil)
+(set-face-background 'highlight-indent-guides-odd-face "darkgray")
+(set-face-background 'highlight-indent-guides-even-face "dimgray")
+(set-face-foreground 'highlight-indent-guides-character-face "dimgray")
+(setq highlight-indent-guides-method `bitmap)
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+
+
+;; Перемещение текста
+(use-package! move-text)
+(move-text-default-bindings)
 ;; (add-hook 'prog-mode-hook #'whitespace-mode)
 ;; (setq whitespace-style '(face tabs spaces trailing))
 ;; (add-hook 'completion-list-mode-hook (lambda () (whitespace-mode -1)))
