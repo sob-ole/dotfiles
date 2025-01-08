@@ -29,6 +29,10 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
+;; (use-package! org-modern)
+;; Option 2: Globally
+;; (with-eval-after-load 'org (global-org-modern-mode))
+
 (use-package! projectile
   :ensure t
   :config
@@ -38,6 +42,7 @@
   (setq projectile-run-use-comint-mode t))
 
 (setq ff-always-try-to-create nil)
+
 
 (defun my-c-mode-common-hook ()
   "Custom settings for C/C++ programming."
@@ -97,20 +102,19 @@
 
 (add-hook 'tree-sitter-after-on-hook #'my-enable-tree-sitter-hl-mode)
 
+;; (use-package! rtags)
+;; (require 'rtags)
+;; (use-package! cmake-ide)
+;; (cmake-ide-setup)
 
-(use-package! rtags)
-(require 'rtags)
-(use-package! cmake-ide)
-(cmake-ide-setup)
 
+;; (use-package! flycheck-plantuml)
+;; ;; Диаграммы Plantuml
+;; (with-eval-after-load 'flycheck
+;;   (require 'flycheck-plantuml)
+;;   (flycheck-plantuml-setup))
 
-(use-package! flycheck-plantuml)
-;; Диаграммы Plantuml
-(with-eval-after-load 'flycheck
-  (require 'flycheck-plantuml)
-  (flycheck-plantuml-setup))
-
-(setq plantuml-output-type "svg")
+;; (setq plantuml-output-type "svg")
 
 (map! :n "C-/" #'comment-line) ; Normal mode
 (map! :i "C-/" #'comment-line) ; Insert mode
@@ -135,15 +139,6 @@
 (setq highlight-indent-guides-method `bitmap)
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 
-
 ;; Перемещение текста
 (use-package! move-text)
 (move-text-default-bindings)
-;; (add-hook 'prog-mode-hook #'whitespace-mode)
-;; (setq whitespace-style '(face tabs spaces trailing))
-;; (add-hook 'completion-list-mode-hook (lambda () (whitespace-mode -1)))
-;; (add-hook 'help-mode-hook (lambda () (whitespace-mode -1)))
-;; (add-hook 'special-mode-hook (lambda () (whitespace-mode -1)))
-;; (set-face-attribute 'whitespace-tab nil :background "gray20" :foreground "gray40")
-;; (set-face-attribute 'whitespace-space nil :background nil :foreground "gray30")
-;; (set-face-attribute 'whitespace-trailing nil :background "red1" :foreground nil)

@@ -65,3 +65,4 @@
 (package! move-text)
 (package! cmake-ide)
 (package! rtags)
+(package! org-modern)
