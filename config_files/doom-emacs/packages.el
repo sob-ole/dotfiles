@@ -1,3 +1,4 @@
+
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
@@ -66,3 +67,6 @@
 (package! cmake-ide)
 (package! rtags)
 (package! org-modern)
+(package! drag-stuff)
+(package! forge)
+(package! multi-vterm)

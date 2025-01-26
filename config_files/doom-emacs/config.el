@@ -8,10 +8,18 @@
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 
-;; Define font specifications
-(setq doom-font (font-spec :family "Hack" :size 15 ))
-(setq doom-variable-pitch-font (font-spec :family "Hack" :size 15 ))
+;; Define a reusable font spec variable
+(defvar my-default-font (font-spec :family "Hack" :size 16)
+  "The default font specification for Emacs.")
+
+;; Apply the font specifications
+(setq doom-font my-default-font)
+(setq doom-variable-pitch-font my-default-font)
 (setq-default line-spacing 0)
+
+;; Force Hack for Cyrillic script
+(when (member "Hack" (font-family-list))
+  (set-fontset-font t 'cyrillic my-default-font))
 
 ;; Performance optimization
 (setq inhibit-compacting-font-caches t)
@@ -20,6 +28,18 @@
 (setq custom-safe-themes t)
 (disable-theme 'default)
 (load-theme 'doom-gruvbox t)
+
+(defun my-load-theme (theme)
+  "Disable all other themes and load THEME."
+  (interactive
+   (list (completing-read "Load custom theme: " (mapcar #'symbol-name (custom-available-themes)))))
+  (mapc #'disable-theme custom-enabled-themes) ;; Unload all active themes
+  (load-theme (intern theme) t)) ;; Load the selected theme
+
+;; Replace `consult-theme` with `my-load-theme` for consistent behavior
+(global-set-key (kbd "C-c T") #'my-load-theme)
+
+
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -121,7 +141,7 @@
 (map! :v "C-/" #'comment-line) ; Visual mode
 
 ;; Настройки mode-line
-(setq doom-modeline-vcs-max-length 40);; Название git-ветки
+(setq doom-modeline-vcs-max-length 40);; Длина строки названия git-ветки
 
 ;; Настройки часов
 ;; Не оповещять о новых письмах (убирает лишнюю точку *)
@@ -140,5 +160,45 @@
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 
 ;; Перемещение текста
-(use-package! move-text)
-(move-text-default-bindings)
+(use-package! drag-stuff)
+(drag-stuff-global-mode 1)
+(drag-stuff-define-keys)
+
+;; Интеграция Git-обёрток (ПР-ы, Issue, и т.д.)
+(use-package! forge)
+
+;; Несколько терминалов
+(use-package! multi-vterm
+  :config
+  (add-hook 'vterm-mode-hook
+                  (lambda ()
+                  (setq-local evil-insert-state-cursor 'box)
+                  (evil-insert-state)))
+  (define-key vterm-mode-map [return]                      #'vterm-send-return)
+
+  (setq vterm-keymap-exceptions nil)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
+  (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+  (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
+  (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
+  (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
+  (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
+  (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
+  (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
