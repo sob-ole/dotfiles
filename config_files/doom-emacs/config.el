@@ -3,7 +3,7 @@
 ;; Использование Unicode по умолчанию
 
 ;; Установка шрифта
-;; Set preferred coding systems
+;; ;; Set preferred coding systems
 (prefer-coding-system 'utf-8)
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
@@ -27,7 +27,9 @@
 ;; Настройка темы
 (setq custom-safe-themes t)
 (disable-theme 'default)
-(load-theme 'doom-gruvbox t)
+
+(load-theme 'doom-solarized-light t)
+(setq doom-theme 'doom-solarized-light)
 
 (defun my-load-theme (theme)
   "Disable all other themes and load THEME."
@@ -36,22 +38,18 @@
   (mapc #'disable-theme custom-enabled-themes) ;; Unload all active themes
   (load-theme (intern theme) t)) ;; Load the selected theme
 
-;; Replace `consult-theme` with `my-load-theme` for consistent behavior
 (global-set-key (kbd "C-c T") #'my-load-theme)
 
-
-
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
-;; (use-package! org-modern)
+(setq large-file-warning-threshold 500000000) ;; 500 MB
+
+(use-package! org-modern
+  :ensure t)
 ;; Option 2: Globally
-;; (with-eval-after-load 'org (global-org-modern-mode))
+(with-eval-after-load 'org (global-org-modern-mode))
 
 (use-package! projectile
   :ensure t
@@ -91,10 +89,13 @@
 (add-hook 'sh-mode-common-hook #'my-sh-mode-common-hook)
 
 ;; C++ DEV expericence
-(use-package! ac-clang)
-(use-package! cmake-ide)
+(use-package! ac-clang
+  :ensure t)
+(use-package! cmake-ide
+  :ensure t)
 
 (use-package! lsp-treemacs
+  :ensure t
   :after lsp)
 
 ;; Иконки для меню автодоплнения (для corfu)
@@ -108,11 +109,14 @@
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 ;; Treemacs - проектный файловый обзорщик в левой половине окна
-(use-package! treemacs)
+(use-package! treemacs
+  :ensure t)
 (treemacs-follow-mode)
 
-(use-package! tree-sitter)
-(use-package! tree-sitter-langs)
+(use-package! tree-sitter
+  :ensure t)
+(use-package! tree-sitter-langs
+  :ensure t)
 ;; Глобальная подсветка синтаксиса
 (global-tree-sitter-mode)
 
@@ -151,7 +155,8 @@
 (display-time-mode 1)
 
 ;; ;; Отрисовка отступов
-(use-package! highlight-indent-guides)
+(use-package! highlight-indent-guides
+  :ensure t)
 (setq highlight-indent-guides-auto-enabled nil)
 (set-face-background 'highlight-indent-guides-odd-face "darkgray")
 (set-face-background 'highlight-indent-guides-even-face "dimgray")
@@ -160,12 +165,15 @@
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 
 ;; Перемещение текста
-(use-package! drag-stuff)
+(use-package! drag-stuff
+  :ensure t)
 (drag-stuff-global-mode 1)
 (drag-stuff-define-keys)
 
+;; Настройка GIT
 ;; Интеграция Git-обёрток (ПР-ы, Issue, и т.д.)
-(use-package! forge)
+(use-package! forge
+  :ensure t)
 
 ;; Несколько терминалов
 (use-package! multi-vterm
@@ -202,3 +210,29 @@
   (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
   (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
   (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+
+;; Размер vterm при открытии
+(set-popup-rule! "*doom:vterm-popup:*" :size 0.15 :vslot -4 :select t :quit nil :ttl 0)
+
+(defun my/vterm-enable-modeline ()
+  (setq-local mode-line-format (doom-modeline 'main)))
+(add-hook 'vterm-mode-hook #'my/vterm-enable-modeline)
+
+;; LeetCode
+(use-package! leetcode
+  :ensure t)
+(setq leetcode-prefer-language "c++")
+(setq leetcode-prefer-sql "mysql")
+(setq leetcode-save-solutions t)
+(setq leetcode-directory "~/leetcode")
+
+(use-package! telega
+  :ensure t
+  :commands (telega)
+  :defer t)
+
+(use-package! evil-tutor
+  :ensure t)
+
+(use-package! pdf-tools
+  :ensure t)

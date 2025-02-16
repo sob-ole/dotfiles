@@ -1,4 +1,3 @@
-
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
@@ -70,3 +69,7 @@
 (package! drag-stuff)
 (package! forge)
 (package! multi-vterm)
+(package! leetcode)
+(package! telega)
+(package! evil-tutor)
+(package! pdf-tools)
