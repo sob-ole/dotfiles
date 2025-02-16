@@ -1,2 +1,2 @@
 # dotfiles
-This is my dotfiles storage
+This is my personal repository for  dotfiles and code practice snippets
