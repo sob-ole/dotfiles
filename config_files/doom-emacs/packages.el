@@ -73,3 +73,6 @@
 (package! telega)
 (package! evil-tutor)
 (package! pdf-tools)
+(package! transwin)
+(package! org-habit-stats)
+(package! ef-themes)
