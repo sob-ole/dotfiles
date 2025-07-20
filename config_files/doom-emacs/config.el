@@ -1,4 +1,4 @@
-;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/config.el -*- lexical-binding: programming pet project memeprogramming pet project memet; -*-
 
 ;; Использование Unicode по умолчанию
 
@@ -28,11 +28,8 @@
 (setq custom-safe-themes t)
 (disable-theme 'default)
 
-(use-package! ef-themes
-  : ensure t)
-
-(load-theme 'ef-melissa-dark t)
-(setq doom-theme 'ef-melissa-dark)
+(load-theme 'doom-gruvbox t)
+(setq doom-theme 'doom-gruvbox)
 
 (defun my-load-theme (theme)
   "Disable all other themes and load THEME."
@@ -93,8 +90,6 @@
 ;; C++ DEV expericence
 (use-package! ac-clang
   :ensure t)
-(use-package! cmake-ide
-  :ensure t)
 
 (use-package! lsp-treemacs
   :ensure t
@@ -130,17 +125,6 @@
 
 ;; (use-package! rtags)
 ;; (require 'rtags)
-;; (use-package! cmake-ide)
-;; (cmake-ide-setup)
-
-
-;; (use-package! flycheck-plantuml)
-;; ;; Диаграммы Plantuml
-;; (with-eval-after-load 'flycheck
-;;   (require 'flycheck-plantuml)
-;;   (flycheck-plantuml-setup))
-
-;; (setq plantuml-output-type "svg")
 
 (map! :n "C-/" #'comment-line) ; Normal mode
 (map! :i "C-/" #'comment-line) ; Insert mode
@@ -172,61 +156,12 @@
 (drag-stuff-global-mode 1)
 (drag-stuff-define-keys)
 
-;; Настройка GIT
-;; Интеграция Git-обёрток (ПР-ы, Issue, и т.д.)
-(use-package! forge
-  :ensure t)
-
-;; Несколько терминалов
-(use-package! multi-vterm
-  :config
-  (add-hook 'vterm-mode-hook
-                  (lambda ()
-                  (setq-local evil-insert-state-cursor 'box)
-                  (evil-insert-state)))
-  (define-key vterm-mode-map [return]                      #'vterm-send-return)
-
-  (setq vterm-keymap-exceptions nil)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-  (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
-  (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
-  (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
-  (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
-  (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
-  (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
-
 ;; Размер vterm при открытии
 (set-popup-rule! "*doom:vterm-popup:*" :size 0.15 :vslot -4 :select t :quit nil :ttl 0)
 
 (defun my/vterm-enable-modeline ()
   (setq-local mode-line-format (doom-modeline 'main)))
 (add-hook 'vterm-mode-hook #'my/vterm-enable-modeline)
-
-;; LeetCode
-(use-package! leetcode
-  :ensure t)
-(setq leetcode-prefer-language "c++")
-(setq leetcode-prefer-sql "mysql")
-(setq leetcode-save-solutions t)
-(setq leetcode-directory "~/leetcode")
 
 (use-package! telega
   :ensure t
@@ -247,6 +182,23 @@
 (define-key org-mode-map (kbd "C-c h") 'org-habit-stats-view-habit-at-point)
 (define-key org-agenda-mode-map (kbd "H") 'org-habit-stats-view-habit-at-point-agenda)
 
-;; Использование .bashrc в Shell
-;; (setq shell-file-name "bash")
-;; (setq shell-command-switch "-ic")
+(defun set-emacs-transparency (alpha)
+  "Set the background transparency of Emacs. ALPHA should be an integer between 0 (transparent) and 100 (opaque)."
+  (interactive "nEnter alpha transparency value (0–100): ")
+  (set-frame-parameter nil 'alpha-background alpha)
+  (setf (alist-get 'alpha-background default-frame-alist) alpha))
+
+(set-emacs-transparency 90)
+
+;; Перемещение порядка рабочих пространств .projectile на "{}"
+(map! :leader
+      (:prefix ("TAB" . "workspace")
+       :desc "Swap workspace left"  "{" #'+workspace/swap-left
+       :desc "Swap workspace right" "}" #'+workspace/swap-right))
+
+;; Отключение записи vim-макросов
+(define-key evil-normal-state-map "q" nil)
+(define-key evil-visual-state-map "q" nil)
+
+
+(use-package! vue-mode)
