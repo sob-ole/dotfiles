@@ -28,8 +28,11 @@
 (setq custom-safe-themes t)
 (disable-theme 'default)
 
-(load-theme 'doom-solarized-light t)
-(setq doom-theme 'doom-solarized-light)
+(use-package! ef-themes
+  : ensure t)
+
+(load-theme 'ef-melissa-dark t)
+(setq doom-theme 'ef-melissa-dark)
 
 (defun my-load-theme (theme)
   "Disable all other themes and load THEME."
@@ -86,7 +89,6 @@
   (sh-set-offset 'statement 0)
   (sh-set-offset 'statement-cont 0))
 
-(add-hook 'sh-mode-common-hook #'my-sh-mode-common-hook)
 
 ;; C++ DEV expericence
 (use-package! ac-clang
@@ -236,3 +238,15 @@
 
 (use-package! pdf-tools
   :ensure t)
+
+(use-package! transwin
+  :ensure t)
+
+(use-package! org-habit-stats
+  :ensure t)
+(define-key org-mode-map (kbd "C-c h") 'org-habit-stats-view-habit-at-point)
+(define-key org-agenda-mode-map (kbd "H") 'org-habit-stats-view-habit-at-point-agenda)
+
+;; Использование .bashrc в Shell
+;; (setq shell-file-name "bash")
+;; (setq shell-command-switch "-ic")
